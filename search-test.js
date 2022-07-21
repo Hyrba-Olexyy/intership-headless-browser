@@ -1,9 +1,15 @@
 const puppeteer = require('puppeteer');
+const {
+    URL,
+    LOAD_OPTIONS,
+    PDF_SAVE_OPTIONS,
+    BROWSER_START_OPTIONS,
+} = require('./constants/constants');
 
 (async () => {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch(BROWSER_START_OPTIONS);
     const page = await browser.newPage();
-    await page.goto('https://pptr.dev/', { waitUntil: 'networkidle0' });
+    await page.goto(URL, LOAD_OPTIONS);
 
     await page.focus('input');
 
@@ -13,11 +19,13 @@ const puppeteer = require('puppeteer');
 
     await page.keyboard.press('f');
 
-    await page.waitForNetworkIdle({ waitUntil: 'networkidle0' });
+    await page.waitForNetworkIdle(LOAD_OPTIONS);
 
     await page.keyboard.press('Enter');
 
-    await page.pdf({ path: './pdf/search-test.pdf', format: 'a4' });
+    await page.waitForNetworkIdle(LOAD_OPTIONS);
+
+    await page.pdf(PDF_SAVE_OPTIONS);
 
     await browser.close();
 })();
